@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div class="container">
+    <h1 >Book an Appointment</h1>
+    <form method="post" action="/appointments">
+      <div>
+      <label for="customerName">Customer Name:</label>
+      <input type="text" id="customerName" name="customerName" required>
+    </div>
+    <br>
+
+    <div>
+      <label for="customerPhone">Customer Phone:</label>
+      <input type="text" id="customerPhone" name="customerPhone" required>
+    </div>
+    <br>
+
+    <div>
+      <label for="serviceType">Service Type:</label>
+      <input type="text" id="serviceType" name="serviceType" required>
+    </div>
+    <br>
+
+    <div>
+      <label for="providerSelect">Select Provider:</label>
+      <select id="providerSelect" name="providerId" required>
+        <option value="" disabled selected>-- Select Provider --</option>
+       <% for(let provider of providers) { %>
+            <option value="<%= provider._id %>"><%= provider.name %></option>
+       <% } %>
+      </select>
+    </div>
+    <br>
+
+    <div>
+      <label for="dateSelect">Select Date:</label>
+      <input type="date" id="dateSelect" name="date" required>
+    </div>
+    <br>
+
+    <div>
+      <label for="timeSelect">Select Time:</label>
+      <select id="timeSelect" name="time" required>
+        <option value="" disabled selected>Select provider and date first</option>
+      </select>
+    </div>
+    <br>
+
+    <button>Book</button>      
+    </form>
+    <script src="/book.js"></script>
+    </div>
+  </body>
+</html>

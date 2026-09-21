@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointmentd</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Appointment Dashboard</h1>
+            <p ><a class="button" href="/book">+ Book New Appointment</a></p>
+        </header>
+  
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Customer Phone</th>
+                    <th>Provider</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (appointments.length === 0) { %>
+                    <tr>
+                        <td colspan="8">No appointments found.</td>
+                    </tr>
+                <% } %>
+                <% for (let appointment of appointments) { %>
+                <tr>
+                    <td><%= appointment.customerName %></td>
+                    <td><%= appointment.customerPhone %></td>
+                    <td><%= appointment.providerId ? appointment.providerId.name : 'Unassigned' %></td>
+                    <td><%= appointment.serviceType %></td>
+                    <td><%= appointment.date %></td>
+                    <td><%= appointment.time %></td>
+                    <td>
+                        <span class="badge badge-<%= appointment.status.toLowerCase() %>">
+                            <%= appointment.status %>
+                        </span>                   
+                        <!-- <strong><%= appointment.status %></strong> -->
+                        <% if (appointment.status === 'CANCELLED' && appointment.cancellationReason) { %>
+                            <br><small>Reason: <%= appointment.cancellationReason %></small>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (appointment.status === 'PENDING') { %>
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <input type="hidden" name="newStatus" value="CONFIRMED">
+                            <button type="submit">Confirm</button>
+                            </form>
+                        <% } else if (appointment.status === 'CONFIRMED') { %>
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <input type="hidden" name="newStatus" value="IN_PROGRESS">
+                            <button type="submit">Start</button>
+                            </form>
+                        <% } else if (appointment.status === 'IN_PROGRESS') { %>
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <input type="hidden" name="newStatus" value="COMPLETED">
+                            <button type="submit">Complete</button>
+                            </form>
+                        <% } %>
+
+                        <% if (appointment.status !== 'COMPLETED' && appointment.status !== 'CANCELLED') { %>
+                            <form action="/appointments/<%= appointment._id %>?_method=DELETE" method="POST" style="display:inline;">
+                            <input type="hidden" name="cancellationReason" value="Cancelled from dashboard">
+                            <button class="btn-cancel" type="submit">Cancel</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>    
+        </table>
+    </div>
+</body>
+</html>
