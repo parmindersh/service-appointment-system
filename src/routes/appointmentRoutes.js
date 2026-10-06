@@ -8,8 +8,6 @@ router.post("/appointments", appointmentController.createAppointment);
 
 router.patch("/appointments/:id/status", appointmentController.updateStatus);
 
-router.delete("/appointments/:id", appointmentController.cancelAppointment);
-
 router.get(
   "/providers/:id/availableSlots",
   appointmentController.getAvailableSlots,

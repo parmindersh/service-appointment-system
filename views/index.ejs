@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointmentd</title>
+    <title>Appointments</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -12,8 +12,7 @@
             <h1>Appointment Dashboard</h1>
             <p ><a class="button" href="/book">+ Book New Appointment</a></p>
         </header>
-  
-        <table border="1" cellpadding="8" cellspacing="0">
+        <table>
             <thead>
                 <tr>
                     <th>Customer Name</th>
@@ -43,32 +42,32 @@
                     <td>
                         <span class="badge badge-<%= appointment.status.toLowerCase() %>">
                             <%= appointment.status %>
-                        </span>                   
-                        <!-- <strong><%= appointment.status %></strong> -->
+                        </span>
                         <% if (appointment.status === 'CANCELLED' && appointment.cancellationReason) { %>
                             <br><small>Reason: <%= appointment.cancellationReason %></small>
                         <% } %>
                     </td>
                     <td>
                         <% if (appointment.status === 'PENDING') { %>
-                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST"">
                             <input type="hidden" name="newStatus" value="CONFIRMED">
                             <button type="submit">Confirm</button>
                             </form>
                         <% } else if (appointment.status === 'CONFIRMED') { %>
-                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST"">
                             <input type="hidden" name="newStatus" value="IN_PROGRESS">
                             <button type="submit">Start</button>
                             </form>
                         <% } else if (appointment.status === 'IN_PROGRESS') { %>
-                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST" style="display:inline;">
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST"">
                             <input type="hidden" name="newStatus" value="COMPLETED">
                             <button type="submit">Complete</button>
                             </form>
                         <% } %>
 
-                        <% if (appointment.status !== 'COMPLETED' && appointment.status !== 'CANCELLED') { %>
-                            <form action="/appointments/<%= appointment._id %>?_method=DELETE" method="POST" style="display:inline;">
+                        <% if (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') { %>
+                            <form action="/appointments/<%= appointment._id %>/status?_method=PATCH" method="POST">
+                            <input type="hidden" name="newStatus" value="CANCELLED">
                             <input type="hidden" name="cancellationReason" value="Cancelled from dashboard">
                             <button class="btn-cancel" type="submit">Cancel</button>
                             </form>

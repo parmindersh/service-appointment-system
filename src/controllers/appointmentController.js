@@ -29,8 +29,6 @@ exports.createAppointment = async (req, res) => {
   try {
     const { providerId, customerName, customerPhone, serviceType, date, time } =
       req.body;
-    console.log(req.body);
-    console.log("before create");
     const appointment = await Appointment.create({
       providerId,
       customerName,
@@ -39,8 +37,6 @@ exports.createAppointment = async (req, res) => {
       date,
       time,
     });
-    console.log("after create");
-    console.log("saved appointment", appointment);
 
     res.redirect("/");
   } catch (err) {
@@ -76,48 +72,19 @@ exports.updateStatus = async (req, res) => {
     if (!validNextStatus.includes(newStatus)) {
       return res
         .status(400)
-        .send(`Invalid status transection: ${currentStatus} to ${newStatus}`);
+        .send(`Invalid status transition: ${currentStatus} to ${newStatus}`);
     }
     appointment.status = newStatus;
 
-    if (cancellationReason) {
-      appointment.cancellationReason = cancellationReason.trim();
+    if (newStatus === "CANCELLED") {
+      appointment.cancellationReason =
+        cancellationReason || "Cancelled by staff/customer";
     }
 
     await appointment.save();
     res.redirect("/");
   } catch (err) {
     res.status(500).send("Error updating appointment status: " + err.message);
-  }
-};
-
-exports.cancelAppointment = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { cancellationReason } = req.body;
-
-    const appointment = await Appointment.findById(id);
-    if (!appointment) {
-      return res.status(404).send("Appointment not found");
-    }
-    if (
-      appointment.status === "COMPLETED" ||
-      appointment.status === "CANCELLED"
-    ) {
-      return res
-        .status(400)
-        .send(
-          `cannot cancel an appointment that. is already ${appointment.status}`,
-        );
-    }
-    appointment.status = "CANCELLED";
-    appointment.cancellationReason =
-      cancellationReason || "Cancelled by staff/customer";
-
-    await appointment.save();
-    res.redirect("/");
-  } catch (err) {
-    res.status(500).send(" appointment cancelation failed: " + err.message);
   }
 };
 
@@ -136,9 +103,8 @@ exports.getAvailableSlots = async (req, res) => {
       status: { $ne: "CANCELLED" },
     });
 
-    const bookedTimes = bookedAppointments.map((app) => app.time); // filter time from whole bunch of data
+    const bookedTimes = bookedAppointments.map((app) => app.time);
     const availableSlots = ALL_DAY_SLOTS.filter(
-      // compare that data with req date time
       (slot) => !bookedTimes.includes(slot),
     );
 

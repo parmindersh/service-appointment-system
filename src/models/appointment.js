@@ -37,7 +37,7 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["PENDING", "CONFIRMED", "IN_PROGRESS", "COMPLETED", "CANCELLED"],
       default: "PENDING",
     },
-    cancelationReason: {
+    cancellationReason: {
       type: String,
       default: null,
     },
