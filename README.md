@@ -4,7 +4,7 @@ A simple appointment booking system built while learning **Node.js, Express, Mon
 
 The main idea of this project is to allow customers to book appointments with service providers while making sure that the same provider cannot be booked for the same date and time.
 
-This project started as a CRUD project, but I also added things like **appointment status management, available time-slot checking, MongoDB indexes and cancellation handling** to make it more realistic.
+This project started as a CRUD project, but I also added things like **appointment status management, available time-slot checking, MongoDB indexes and soft cancellation handling** to make it more realistic.
 
 ---
 
@@ -44,7 +44,6 @@ An appointment can also be cancelled from an active state:
 ```text
 PENDING ──────→ CANCELLED
 CONFIRMED ────→ CANCELLED
-IN_PROGRESS ──→ CANCELLED
 ```
 
 Once an appointment is:
@@ -143,7 +142,7 @@ This logic is handled on the server and returned as JSON.
 service-appointment-system/
 │
 ├── public/
-│   └── styles.css
+│   └── style.css
 │
 ├── src/
 │   ├── config/
@@ -162,7 +161,6 @@ service-appointment-system/
 ├── views/
 │   ├── book.ejs
 │   ├── index.ejs
-│   └── partials/
 │
 ├── .gitignore
 ├── app.js
@@ -182,7 +180,6 @@ service-appointment-system/
 | `GET`    | `/book`                         | Open booking form         |
 | `POST`   | `/appointments`                 | Create appointment        |
 | `PATCH`  | `/appointments/:id/status`      | Update appointment status |
-| `DELETE` | `/appointments/:id`             | Cancel appointment        |
 | `GET`    | `/providers/:id/availableSlots` | Get available slots       |
 
 ---
@@ -286,36 +283,6 @@ MONGO_URL=your_mongodb_connection_string
 ```
 
 **Don't upload your `.env` file to GitHub.**
-
----
-
-## 📸 Screenshots
-
-### 🏠 Appointment Dashboard
-
-Add a screenshot of your main appointment page here.
-
-```md
-![Appointment Dashboard](screenshots/dashboard.png)
-```
-
-### 📅 Booking Page
-
-Add a screenshot of your booking form here.
-
-```md
-![Booking Page](screenshots/booking.png)
-```
-
-### 🔄 Appointment Status
-
-Add a screenshot showing the appointment status controls.
-
-```md
-![Appointment Status](screenshots/status.png)
-```
-
-> You can create a `screenshots` folder in the project and put your screenshots there.
 
 ---
 
